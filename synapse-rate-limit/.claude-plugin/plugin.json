@@ -1,7 +1,7 @@
 {
   "name": "synapse-rate-limit",
-  "version": "0.3.0",
-  "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens, gráfico dos últimos turnos e variação.",
+  "version": "0.3.1",
+  "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens e gráfico dos últimos turnos.",
   "author": {
     "name": "Fabio Borchardt",
     "url": "https://github.com/fabioivan"
@@ -32,7 +32,7 @@
     "enabled": {
       "type": "boolean",
       "title": "Context line (MB and forecast)",
-      "description": "Show the line with weather, size in MB, tokens, a chart of the last turns and the last turn's growth",
+      "description": "Show the line with weather, size in MB, tokens and a chart of the last turns",
       "default": true
     },
     "visible": {

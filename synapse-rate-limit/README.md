@@ -10,11 +10,11 @@ A base é o mod [`hud`](https://github.com/hoobnn/hoobnn-agent-mods/tree/main/cl
 
 ## Linha do synapse (o que este plugin acrescenta)
 
-A última linha da barra mostra o clima do contexto, o tamanho em MB do que é enviado ao modelo e como o contexto vem crescendo:
+A última linha da barra mostra o clima do contexto, o tamanho em MB do que é enviado ao modelo e como o contexto vem evoluindo. O crescimento do último turno não aparece aqui, pois a linha de extras do HUD já o mostra (`turnGrowthTokens`):
 
 ```
-☂ Chuva  12 MB  134k / 1m  ▁▂▂▃▃▄▅  +98k no último turno      (pt-BR)
-☂ Rain   12 MB  134k / 1m  ▁▂▂▃▃▄▅  +98k last turn            (en)
+☂ Chuva  12 MB  134k / 1m  ▁▂▂▃▃▄▅      (pt-BR)
+☂ Rain   12 MB  134k / 1m  ▁▂▂▃▃▄▅      (en)
 ```
 
 | Trecho | Significado |
@@ -23,7 +23,6 @@ A última linha da barra mostra o clima do contexto, o tamanho em MB do que é e
 | `12 MB` | Tamanho em MB do contexto e dos anexos (as mensagens enviadas à API), colorido pelo mesmo clima. A referência é o limite de 32 MB |
 | `134k / 1m` | Tokens usados / janela de contexto |
 | `▁▂▃…` | Gráfico dos últimos 12 turnos |
-| `+98k no último turno` | Quanto o contexto cresceu no último turno |
 
 - O clima usa o maior valor entre a porcentagem de tokens e a porcentagem de MB, então pode mudar por causa dos anexos mesmo com poucos tokens.
 - A porcentagem do contexto não se repete aqui, pois a linha de contexto do HUD já a mostra.
@@ -78,7 +77,7 @@ O comando era `/hud` no plugin original. `/synapse` também funciona no meio de 
 | Opção | Padrão | Descrição |
 | --- | --- | --- |
 | `language` | `auto` | Idioma do HUD: `auto` (o do Claude Code), `en` ou `pt-BR` (veja [Idioma](#idioma)) |
-| `enabled` | `true` | Linha do synapse (clima, MB, tokens, gráfico, variação) |
+| `enabled` | `true` | Linha do synapse (clima, MB, tokens, gráfico) |
 | `visible` | `true` | Mostra o HUD. `/synapse`, `/synapse on`, `/synapse off` e o botão do rodapé alteram a opção, que é mantida entre sessões |
 | `footerButton` | `true` | Botão **HUD** no rodapé do prompt |
 | `position` | `above` | `above` (faixa acima do prompt) ou `below` (abaixo, ao lado da linha de dicas, onde ficava a statusline) |
@@ -180,7 +179,7 @@ A stdin da statusline do Claude Code traz estes campos; a API de mods não, ent�
 
 - Comando `/synapse` no lugar de `/hud`; ferramenta de debug `synapse_debug`.
 - Estado e chaves de configuração sob o nome `synapse-rate-limit`, sem conflito com o `hud`.
-- Linha extra do synapse (clima, MB, tokens, gráfico e variação) e a opção `enabled`.
+- Linha extra do synapse (clima, MB, tokens e gráfico) e a opção `enabled`.
 - Opção `language` (`auto`, `en`, `pt-BR`), que segue o idioma do Claude Code.
 - Espaço em branco entre o chat e a barra, quando ela fica acima do prompt.
 - Os caches continuam em `plugins/claude-hud-mod`, o mesmo diretório do `hud` original, então os dois compartilham o livro de custos diários.

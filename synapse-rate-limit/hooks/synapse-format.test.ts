@@ -1,6 +1,6 @@
 import { test, expect } from 'claude-code/testing'
 
-import { bytesPercent, fmtMb, fmtDelta, fmtTokens, spark, weather } from './synapse-format'
+import { bytesPercent, fmtMb, fmtTokens, spark, weather } from './synapse-format'
 import { fromClaudeCode, resolveLanguage } from './language'
 
 test('faixas de clima em inglês (padrão) e português', () => {
@@ -18,7 +18,6 @@ test('faixas de clima em inglês (padrão) e português', () => {
 test('formatação', () => {
   expect(fmtTokens(134000)).toBe('134K')
   expect(fmtTokens(1000000)).toBe('1M')
-  expect(fmtDelta(98000)).toBe('+98k')
   expect(spark([0, 100])).toBe('▁█')
   expect(fmtMb(12.34 * 1024 * 1024)).toBe('12 MB')
   expect(fmtMb(1.5 * 1024 * 1024)).toBe('1.5 MB')

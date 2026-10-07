@@ -6,9 +6,9 @@ export type Weather = { symbol: string; word: string; color: string }
 export type RowLanguage = 'en' | 'pt-BR'
 
 /** Os textos da linha do synapse; um idioma que o HUD fala e a linha não tem usa o inglês. */
-export const ROW_TEXT: Record<RowLanguage, { weather: [string, string, string, string, string]; lastTurn: string }> = {
-  en: { weather: ['Clear', 'Cloudy', 'Rain', 'Storm', 'Compact soon'], lastTurn: 'last turn' },
-  'pt-BR': { weather: ['Limpo', 'Nublado', 'Chuva', 'Tempestade', 'Compacta logo'], lastTurn: 'no último turno' },
+export const ROW_TEXT: Record<RowLanguage, { weather: [string, string, string, string, string] }> = {
+  en: { weather: ['Clear', 'Cloudy', 'Rain', 'Storm', 'Compact soon'] },
+  'pt-BR': { weather: ['Limpo', 'Nublado', 'Chuva', 'Tempestade', 'Compacta logo'] },
 }
 
 export function rowText(lang: string) {
@@ -31,12 +31,6 @@ export function fmtTokens(n: number): string {
   }
   if (n >= 1000) return `${Math.round(n / 1000)}K`
   return String(n)
-}
-
-export function fmtDelta(n: number): string {
-  if (n >= 1_000_000) return `+${(n / 1_000_000).toFixed(1)}M`
-  if (n >= 1000) return `+${Math.round(n / 1000)}k`
-  return `+${n}`
 }
 
 const BARS = '▁▂▃▄▅▆▇█'

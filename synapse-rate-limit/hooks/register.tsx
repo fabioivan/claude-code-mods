@@ -182,12 +182,10 @@ export const register: Register = (on, options) => {
   let compactAt: { window: number; at: number | null } | null = null
   // The 5-hour window's readings this session: its forecast follows the last hour's pace.
   let fiveHour: Samples | undefined
-  // A linha de contexto: tamanho do contexto/anexos (lido ao fim de cada turno), os últimos turnos e a variação.
+  // A linha de contexto: tamanho do contexto/anexos (lido ao fim de cada turno), e os últimos turnos.
   let sizeBytes = 0
   let sizePercent = 0
-  let prevTokens: number | null = null
   let percentLog: number[] = []
-  let lastDelta: number | null = null
 
   const schedule = () => {
     // A draw can come before session.start: nothing to schedule on yet, and
@@ -302,7 +300,6 @@ export const register: Register = (on, options) => {
                   tokens: ctxTokens,
                   window,
                   history: percentLog,
-                  delta: lastDelta,
                 } satisfies ContextView),
               ]
             : themed
@@ -591,8 +588,6 @@ export const register: Register = (on, options) => {
         sizeBytes = bytes
         sizePercent = bytesPercent(bytes)
         const tokens = context.tokens ?? 0
-        lastDelta = prevTokens === null ? null : Math.max(0, tokens - prevTokens)
-        prevTokens = tokens
         const pct = context.percent ?? (context.window ? (tokens / context.window) * 100 : 0)
         percentLog = [...percentLog, Math.round(Math.max(pct, sizePercent))].slice(-MAX_TURNS)
         schedule()
