@@ -1,0 +1,25 @@
+{
+  "name": "fabioivan-mods",
+  "owner": {
+    "name": "Fabio Borchardt",
+    "url": "https://github.com/fabioivan"
+  },
+  "metadata": {
+    "description": "Mods para o Claude Code",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "synapse-rate-limit",
+      "source": "./synapse-rate-limit",
+      "description": "HUD completo (baseado no hud) mais a linha do synapse: clima, MB do contexto/anexos, tokens, gráfico e variação",
+      "version": "0.2.0",
+      "category": "monitoring",
+      "tags": [
+        "hud",
+        "contexto",
+        "mod"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "name": "synapse-rate-limit",
+  "version": "0.2.0",
+  "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens, gráfico dos últimos turnos e variação.",
+  "author": {
+    "name": "hoobnn",
+    "url": "https://github.com/hoobnn"
+  },
+  "homepage": "https://github.com/hoobnn/hoobnn-agent-mods",
+  "repository": "https://github.com/hoobnn/hoobnn-agent-mods",
+  "license": "MIT",
+  "keywords": [
+    "hud",
+    "statusline",
+    "context",
+    "usage",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "enabled": {
+      "type": "boolean",
+      "title": "Linha de contexto (MB e previsão)",
+      "description": "Mostra a linha com clima, % do contexto, tamanho em MB, tokens, gráfico dos últimos turnos e variação do último turno.",
+      "default": true
+    },
+    "visible": {
+      "type": "boolean",
+      "title": "Show the HUD",
+      "description": "Draw the HUD; /synapse, /synapse off and /synapse on change this too",
+      "default": true
+    },
+    "footerButton": {
+      "type": "boolean",
+      "title": "Footer button",
+      "description": "A HUD button in the prompt footer that hides and shows the HUD, as /synapse off and /synapse on do",
+      "default": true
+    },
+    "position": {
+      "type": "string",
+      "title": "Position",
+      "description": "Where the HUD draws: above the prompt (a band) or below it (beside the hint line, where the statusline sat)",
+      "options": [
+        "above",
+        "below"
+      ],
+      "default": "above"
+    },
+    "theme": {
+      "type": "string",
+      "title": "Theme",
+      "description": "The HUD's look: palette, icons and separators (neon, rainbow, emoji, sakura, kawaii, mecha, shonen, tokyo-night, matrix; nerd and powerline need a Nerd Font). /synapse theme switches it live",
+      "options": [
+        "classic",
+        "neon",
+        "rainbow",
+        "emoji",
+        "sakura",
+        "kawaii",
+        "mecha",
+        "shonen",
+        "tokyo-night",
+        "matrix",
+        "nerd",
+        "powerline"
+      ],
+      "default": "classic"
+    },
+    "showMascot": {
+      "type": "boolean",
+      "title": "Theme mascot",
+      "description": "Show the anime themes' kaomoji mascot (sakura, kawaii, mecha, shonen), whose face follows the context and quota",
+      "default": true
+    },
+    "extraCmd": {
+      "type": "string",
+      "title": "Extra command",
+      "description": "claude-hud's --extra-cmd: a shell command whose output becomes a label (needs CLAUDE_HUD_ALLOW_EXTRA_CMD=1)",
+      "default": ""
+    },
+    "debug": {
+      "type": "boolean",
+      "title": "Debug tool",
+      "description": "Register mcp__synapse-rate-limit__synapse_debug, which reports the stdin the mod built, the rendered lines and the last error",
+      "default": false
+    },
+    "notifyAfterSeconds": {
+      "type": "number",
+      "title": "Notify after (s)",
+      "description": "Toast (and chime) when a turn that ran at least this long ends; 0 (the default) turns it off",
+      "default": 0
+    },
+    "notifySound": {
+      "type": "boolean",
+      "title": "Notify with a chime",
+      "description": "Play a short chime with the turn-done toast (macOS)",
+      "default": true
+    },
+    "contextAlerts": {
+      "type": "string",
+      "title": "Context alerts (%)",
+      "description": "Toast when context use reaches each of these percents, comma separated (e.g. 80,90); empty (the default) turns it off",
+      "default": ""
+    },
+    "usageAlerts": {
+      "type": "string",
+      "title": "Usage alerts (%)",
+      "description": "Toast when the 5-hour or 7-day limit reaches each of these percents (e.g. 80,90); empty (the default) turns it off",
+      "default": ""
+    },
+    "showForecast": {
+      "type": "boolean",
+      "title": "Usage forecast",
+      "description": "Show when a usage limit runs out at the current rate, if that is before it resets",
+      "default": true
+    },
+    "dailyBudgetUsd": {
+      "type": "number",
+      "title": "Daily budget (USD)",
+      "description": "Show today's spend across sessions against this budget; 0 turns it off",
+      "default": 0
+    },
+    "showHistory": {
+      "type": "boolean",
+      "title": "Spend history",
+      "description": "Show the last 7 days' spend as a sparkline, with the streak of days in use (off by default; /hud detail shows the spend either way)",
+      "default": false
+    },
+    "summaryEveryTurns": {
+      "type": "number",
+      "title": "Task summary every N turns",
+      "description": "Summarize the task in one line after the first turn and every N turns (a fork of the conversation, served from the prompt cache); 0 turns it off",
+      "default": 5
+    },
+    "compactWarnPercent": {
+      "type": "number",
+      "title": "Auto-compact countdown",
+      "description": "Show the tokens left before auto-compaction once the context is this percent of the way there; 0 turns it off",
+      "default": 60
+    },
+    "coldCacheTokens": {
+      "type": "number",
+      "title": "Expired cache warning",
+      "description": "Once the prompt cache has expired, show how many tokens the next message writes to it again, when the context holds at least this many; 0 turns it off",
+      "default": 20000
+    },
+    "turnGrowthTokens": {
+      "type": "number",
+      "title": "Context growth per turn",
+      "description": "When a turn grows the context by at least this many tokens, show by how much, beside the recent turns' growth; 0 turns it off",
+      "default": 20000
+    },
+    "gitDirtyWarn": {
+      "type": "number",
+      "title": "Uncommitted changes warning",
+      "description": "Warn when this many paths are changed and uncommitted; 0 turns it off",
+      "default": 20
+    },
+    "gitAheadWarn": {
+      "type": "number",
+      "title": "Unpushed commits warning",
+      "description": "Warn when this many commits are not pushed; 0 turns it off",
+      "default": 5
+    },
+    "showAgents": {
+      "type": "boolean",
+      "title": "Subagent lines",
+      "description": "Show claude-hud's subagent lines; off by default, as Claude Code lists running subagents itself with their time and tokens",
+      "default": false
+    }
+  }
+}
