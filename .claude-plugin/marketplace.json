@@ -13,7 +13,7 @@
       "name": "synapse-rate-limit",
       "source": "./synapse-rate-limit",
       "description": "HUD completo (baseado no hud) mais a linha do synapse: clima, MB do contexto/anexos, tokens, e gráfico",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "category": "monitoring",
       "tags": [
         "hud",

@@ -458,9 +458,7 @@ export const register: Register = (on, options) => {
   on('prompt.submit', async ($, e, next) => {
     if (await read($, isPicking)) await update($, isPicking, () => false)
     if (await sawBridge($, e.origin)) schedule()
-    const result = await next(e)
-    if (config.hasContextLine) setTimeout(() => void $.session.messages({ as: 'api' }).then(applySize).catch(() => {}), 300)
-    return result
+    return next(e)
   })
   on('command.run', async ($, e, next) => {
     if (await sawBridge($, e.origin)) schedule()
@@ -481,7 +479,13 @@ export const register: Register = (on, options) => {
   // Usage pushed by the engine: the alerts at once, and the gauges redrawn.
   on('session.measure', async ($, e, next) => {
     await alert($, gaugesOf(e), config.contextAlerts, config.usageAlerts)
-    if (config.hasContextLine) applySize(await $.session.messages({ as: 'api' }).catch(() => null))
+    if (config.hasContextLine) {
+      try {
+        applySize(await $.session.messages({ as: 'api' }))
+      } catch {
+        // sem leitura agora
+      }
+    }
     schedule()
     return next(e)
   })
@@ -539,7 +543,13 @@ export const register: Register = (on, options) => {
   })
 
   on('turn.step', async function* ($, e, next) {
-    if (!e.agentId && config.hasContextLine) applySize(await $.session.messages({ as: 'api' }).catch(() => null))
+    if (!e.agentId && config.hasContextLine) {
+      try {
+        applySize(await $.session.messages({ as: 'api' }))
+      } catch {
+        // sem leitura agora
+      }
+    }
     const started = Date.now()
     const result = yield* next(e)
     const elapsed = Date.now() - started
