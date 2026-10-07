@@ -663,7 +663,8 @@ export const register: Register = (on, options) => {
     }
   }
 
-  if (config.position === 'above') {
+  {
+    // No desktop o HUD fica sempre acima do prompt (não há linha abaixo); nas demais superfícies vale a opção position.
     // A picker (`/` commands, `@` files) opens above the band: the band steps aside meanwhile.
   on('prompt.edit', async ($, e, next) => {
     const box = await next(e)
@@ -673,6 +674,7 @@ export const register: Register = (on, options) => {
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+      if (config.position === 'below' && e.surface !== 'desktop') return next(e)
       // Two cells in, as the engine indents the lines under the prompt.
       trackWidth(e.props.bodyColumns - 2)
       const rows = await read($, lines)
@@ -683,9 +685,11 @@ export const register: Register = (on, options) => {
       // Uma linha em branco (~24px) separa o HUD do chat.
       return drawRows($.ui.resolve(e), rows, await next(e), 2, 1)
     })
-  } else {
-    // Under the prompt, where the statusline sat: the HUD, then the engine's hint line.
+  }
+  {
+    // Under the prompt, where the statusline sat: the HUD, then the engine's hint line (exceto no desktop).
     on('ui.render', { component: 'PromptHint' }, async ($, e, next) => {
+      if (config.position !== 'below' || e.surface === 'desktop') return next(e)
       trackWidth(e.viewport?.columns)
       const rows = await read($, lines)
       if (rows.length === 0 || (await read($, isHidden))) {

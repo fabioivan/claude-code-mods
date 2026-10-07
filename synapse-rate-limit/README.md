@@ -82,7 +82,7 @@ The command was `/hud` in the original plugin. `/synapse` runs mid-turn too, and
 | `enabled` | `true` | The synapse line (weather, MB, tokens, chart) |
 | `visible` | `true` | Show the HUD. `/synapse`, `/synapse on`, `/synapse off` and the footer button change the option, which is kept across sessions |
 | `footerButton` | `true` | The **HUD** button in the prompt footer |
-| `position` | `above` | `above` (a band above the prompt) or `below` (beside the hint line, where the statusline sat) |
+| `position` | `above` | `above` (a band above the prompt) or `below` (beside the hint line, where the statusline sat); the desktop app always draws above |
 | `theme` | `classic` | Theme (see below) |
 | `showMascot` | `true` | The anime themes' mascot |
 | `extraCmd` | empty | claude-hud's `--extra-cmd`: a shell command whose output becomes a label (needs `CLAUDE_HUD_ALLOW_EXTRA_CMD=1`) |

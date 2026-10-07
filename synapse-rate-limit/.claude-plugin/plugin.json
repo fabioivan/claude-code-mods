@@ -1,6 +1,6 @@
 {
   "name": "synapse-rate-limit",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens e gráfico dos últimos turnos.",
   "author": {
     "name": "Fabio Borchardt",
@@ -50,7 +50,7 @@
     "position": {
       "type": "string",
       "title": "Position",
-      "description": "Where the HUD draws: above the prompt (a band) or below it (beside the hint line, where the statusline sat)",
+      "description": "Where the HUD draws: above the prompt (a band) or below it (beside the hint line, where the statusline sat). The desktop app has no line below, so it always draws above"
       "options": [
         "above",
         "below"

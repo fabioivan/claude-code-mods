@@ -193,7 +193,7 @@ test('position below draws under the prompt and leaves the band alone', { option
   })
   await $.session.start({ cwd: CWD, surface: 'terminal', isInteractive: true })
   for (let i = 0; i < 30; i++) await clock.settle()
-  for (const surface of SURFACES) {
+  for (const surface of SURFACES.filter(x => x !== 'desktop')) {
     const hint = await $.ui.mount({ plugin: 'synapse-rate-limit', surface, ...HINT })
     const shown = (await hint.findAll({ type: 'Text' })).map(t => t.text).join('')
     expect(/Opus 5\.5/.test(shown)).toBe(true)
@@ -806,4 +806,20 @@ test('footerButton off leaves the footer to the engine', { options: { footerButt
   const footer = await $.ui.mount({ plugin: 'synapse-rate-limit', surface: 'terminal', component: 'SessionMode', props: { modes: ['focus'] } })
   expect(await footer.find({ type: 'Button', key: 'hud-toggle' })).toBeUndefined()
   await footer.unmount()
+})
+
+test('position below: the desktop still draws the HUD above the prompt, the terminal keeps it below', { options: { position: 'below' } }, async ($, on) => {
+  const clock = host(on)
+  on('ui.render', ($, e) => {
+    const { Box } = $.ui.resolve(e)
+    return <Box key="core" />
+  })
+  await $.session.start({ cwd: CWD, surface: 'desktop', isInteractive: true })
+  for (let i = 0; i < 30; i++) await clock.settle()
+  const desktop = await $.ui.mount({ plugin: 'synapse-rate-limit', surface: 'desktop', ...BAND })
+  expect((await desktop.findAll({ type: 'Text' })).length).toBeGreaterThan(0)
+  await desktop.unmount()
+  const terminal = await $.ui.mount({ plugin: 'synapse-rate-limit', surface: 'terminal', ...BAND })
+  expect((await terminal.findAll({ type: 'Text' })).length).toBe(0)
+  await terminal.unmount()
 })

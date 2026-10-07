@@ -82,7 +82,7 @@ O comando era `/hud` no plugin original. `/synapse` também funciona no meio de 
 | `enabled` | `true` | Linha do synapse (clima, MB, tokens, gráfico) |
 | `visible` | `true` | Mostra o HUD. `/synapse`, `/synapse on`, `/synapse off` e o botão do rodapé alteram a opção, que é mantida entre sessões |
 | `footerButton` | `true` | Botão **HUD** no rodapé do prompt |
-| `position` | `above` | `above` (faixa acima do prompt) ou `below` (abaixo, ao lado da linha de dicas, onde ficava a statusline) |
+| `position` | `above` | `above` (faixa acima do prompt) ou `below` (abaixo, ao lado da linha de dicas, onde ficava a statusline); no app desktop sempre fica acima |
 | `theme` | `classic` | Tema (veja abaixo) |
 | `showMascot` | `true` | Mascote dos temas anime |
 | `extraCmd` | vazio | `--extra-cmd` do claude-hud: comando de shell cuja saída vira um rótulo (exige `CLAUDE_HUD_ALLOW_EXTRA_CMD=1`) |
