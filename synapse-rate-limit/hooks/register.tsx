@@ -186,22 +186,16 @@ export const register: Register = (on, options) => {
   let sizeBytes = 0
   let sizePercent = 0
   let percentLog: number[] = []
-  // Mede o que o próximo request leva (mensagens + anexos inline). Roda também antes de cada passo
-  // e no envio do prompt: o request que estoura o limite é o que ainda não fechou um turno.
-  const measureSize = async ($: any) => {
-    if (!config.hasContextLine) return
-    try {
-      const messages = await $.session.messages({ as: 'api' })
-      let bytes = 0
-      if (Array.isArray(messages)) for (const msg of messages) bytes += JSON.stringify(msg).length
-      if (bytes !== sizeBytes) {
-        sizeBytes = bytes
-        sizePercent = bytesPercent(bytes)
-        schedule()
-      }
-    } catch {
-      // sem leitura agora: mantém o último valor
-    }
+  // Aplica o tamanho medido do próximo request (mensagens + anexos inline). É medido também antes
+  // de cada passo e no envio do prompt: o request que estoura o limite é o que ainda não fechou um turno.
+  const applySize = (messages: unknown) => {
+    if (!config.hasContextLine || !Array.isArray(messages)) return
+    let bytes = 0
+    for (const msg of messages) bytes += JSON.stringify(msg).length
+    if (bytes === sizeBytes) return
+    sizeBytes = bytes
+    sizePercent = bytesPercent(bytes)
+    schedule()
   }
 
   const schedule = () => {
@@ -465,7 +459,7 @@ export const register: Register = (on, options) => {
     if (await read($, isPicking)) await update($, isPicking, () => false)
     if (await sawBridge($, e.origin)) schedule()
     const result = await next(e)
-    setTimeout(() => void measureSize($), 300)
+    if (config.hasContextLine) setTimeout(() => void $.session.messages({ as: 'api' }).then(applySize).catch(() => {}), 300)
     return result
   })
   on('command.run', async ($, e, next) => {
@@ -487,7 +481,7 @@ export const register: Register = (on, options) => {
   // Usage pushed by the engine: the alerts at once, and the gauges redrawn.
   on('session.measure', async ($, e, next) => {
     await alert($, gaugesOf(e), config.contextAlerts, config.usageAlerts)
-    await measureSize($)
+    if (config.hasContextLine) applySize(await $.session.messages({ as: 'api' }).catch(() => null))
     schedule()
     return next(e)
   })
@@ -545,7 +539,7 @@ export const register: Register = (on, options) => {
   })
 
   on('turn.step', async function* ($, e, next) {
-    if (!e.agentId) await measureSize($)
+    if (!e.agentId && config.hasContextLine) applySize(await $.session.messages({ as: 'api' }).catch(() => null))
     const started = Date.now()
     const result = yield* next(e)
     const elapsed = Date.now() - started
