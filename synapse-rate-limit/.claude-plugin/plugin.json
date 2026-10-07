@@ -1,10 +1,10 @@
 {
   "name": "synapse-rate-limit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens, gráfico dos últimos turnos e variação.",
   "author": {
-    "name": "hoobnn",
-    "url": "https://github.com/hoobnn"
+    "name": "Fabio Borchardt",
+    "url": "https://github.com/fabioivan"
   },
   "homepage": "https://github.com/hoobnn/hoobnn-agent-mods",
   "repository": "https://github.com/hoobnn/hoobnn-agent-mods",
