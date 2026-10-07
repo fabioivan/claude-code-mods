@@ -20,4 +20,6 @@ Desabilite o plugin `hud` original ao usar o `synapse-rate-limit`, para a barra 
 
 ## Licença
 
+MIT (ver [`LICENSE`](./LICENSE)).
+
 O `synapse-rate-limit` inclui código do claude-hud, sob MIT (ver `synapse-rate-limit/LICENSE.claude-hud`).
