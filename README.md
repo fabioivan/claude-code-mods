@@ -1,8 +1,10 @@
 # claude-code-mods
 
-Marketplace de mods para o Claude Code.
+[Português](README.pt-BR.md) · **English**
 
-## Instalação
+A marketplace of Claude Code mods.
+
+## Install
 
 ```
 /plugin marketplace add fabioivan/claude-code-mods
@@ -12,14 +14,14 @@ Marketplace de mods para o Claude Code.
 
 ## Plugins
 
-| Plugin | Descrição |
+| Plugin | Description |
 | --- | --- |
-| [`synapse-rate-limit`](./synapse-rate-limit) | HUD completo (baseado no mod `hud` e no claude-hud) com alertas, previsão de limite, orçamento, painel de detalhes e 12 temas, mais a linha do synapse: clima, MB do contexto/anexos, tokens e gráfico dos últimos turnos. |
+| [`synapse-rate-limit`](./synapse-rate-limit) | A full HUD (based on the `hud` mod and claude-hud) with alerts, a limit forecast, a budget, a detail pane and 12 themes, plus the synapse line: weather, context/attachments size in MB, tokens and a chart of the last turns. |
 
-Desabilite o plugin `hud` original ao usar o `synapse-rate-limit`, para a barra não aparecer duas vezes.
+Disable the original `hud` plugin when using `synapse-rate-limit`, so the bar does not show twice.
 
-## Licença
+## License
 
-MIT (ver [`LICENSE`](./LICENSE)).
+MIT (see [`LICENSE`](./LICENSE)).
 
-O `synapse-rate-limit` inclui código do claude-hud, sob MIT (ver `synapse-rate-limit/LICENSE.claude-hud`).
+`synapse-rate-limit` includes code from claude-hud, under MIT (see `synapse-rate-limit/LICENSE.claude-hud`).

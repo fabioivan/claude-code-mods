@@ -1,45 +1,47 @@
-# synapse-rate-limit: um HUD para o Claude Code com clima e MB do contexto
+# synapse-rate-limit: a Claude Code HUD with weather and context size in MB
 
-Mod do Claude Code que reúne, em uma barra acima (ou abaixo) do prompt, o que importa de relance: modelo, projeto, git, contexto, uso, ferramentas, subagentes e todos. Além disso traz alertas, previsão de esgotamento do limite, orçamento diário, resumo da tarefa em uma linha, um painel de detalhes e doze temas que você troca ao vivo.
+[Português](README.pt-BR.md) · **English**
 
-A base é o mod [`hud`](https://github.com/hoobnn/hoobnn-agent-mods/tree/main/claude-code/hud) (hoobnn), que por sua vez reconstrói o [claude-hud](https://github.com/jarrodwatts/claude-hud) 0.10.0 (Jarrod Watts) como mod do Claude Code. O que este plugin acrescenta é a **linha do synapse**.
+A Claude Code mod that gathers, in a bar above (or below) the prompt, what matters at a glance: model, project, git, context, usage, tools, subagents and todos. On top of that it adds alerts, a usage forecast, a daily budget, a one-line task summary, a detail pane and twelve themes you switch live.
 
-![synapse-rate-limit, tema neon](assets/themes/neon.png)
+It is based on the [`hud`](https://github.com/hoobnn/hoobnn-agent-mods/tree/main/claude-code/hud) mod (hoobnn), which rebuilds [claude-hud](https://github.com/jarrodwatts/claude-hud) 0.10.0 (Jarrod Watts) as a Claude Code mod. What this plugin adds is the **synapse line**.
 
-> Não use junto com o plugin `hud` original: as duas barras apareceriam ao mesmo tempo. Desabilite o `hud`.
+![synapse-rate-limit, neon theme](assets/themes/neon.png)
 
-## Linha do synapse (o que este plugin acrescenta)
+> Do not use it together with the original `hud` plugin: both bars would show at once. Disable `hud`.
 
-A última linha da barra mostra o clima do contexto, o tamanho em MB do que é enviado ao modelo e como o contexto vem evoluindo. O crescimento do último turno não aparece aqui, pois a linha de extras do HUD já o mostra (`turnGrowthTokens`):
+## The synapse line (what this plugin adds)
+
+The last line of the bar shows the context's weather and the size in MB of what is sent to the model, and how the context has been evolving:
 
 ```
-☂ Chuva  12 MB  134k / 1m  ▁▂▂▃▃▄▅      (pt-BR)
 ☂ Rain   12 MB  134k / 1m  ▁▂▂▃▃▄▅      (en)
+☂ Chuva  12 MB  134k / 1m  ▁▂▂▃▃▄▅      (pt-BR)
 ```
 
-| Trecho | Significado |
+| Part | Meaning |
 | --- | --- |
-| `☂ Chuva` | Clima (a "previsão"): `☀ Limpo` (`Clear`) abaixo de 25%, `☁ Nublado` (`Cloudy`) a partir de 25%, `☂ Chuva` (`Rain`) a partir de 50%, `↯ Tempestade` (`Storm`) a partir de 75% e `! Compacta logo` (`Compact soon`) a partir de 90% |
-| `12 MB` | Tamanho em MB do contexto e dos anexos (as mensagens enviadas à API), colorido pelo mesmo clima. A referência é o limite de 32 MB |
-| `134k / 1m` | Tokens usados / janela de contexto |
-| `▁▂▃…` | Gráfico dos últimos 12 turnos |
+| `☂ Rain` | Weather (the "forecast"): `☀ Clear` below 25%, `☁ Cloudy` from 25%, `☂ Rain` from 50%, `↯ Storm` from 75% and `! Compact soon` from 90% |
+| `12 MB` | Size in MB of the context and attachments (the messages sent to the API), colored by the same weather. The reference is the 32 MB limit |
+| `134k / 1m` | Tokens used / context window |
+| `▁▂▃…` | Chart of the last 12 turns |
 
-- O clima usa o maior valor entre a porcentagem de tokens e a porcentagem de MB, então pode mudar por causa dos anexos mesmo com poucos tokens.
-- A porcentagem do contexto não se repete aqui, pois a linha de contexto do HUD já a mostra.
-- O tamanho em MB é recalculado ao fim de cada turno.
-- Quando o HUD está acima do prompt, uma linha em branco separa a barra do chat.
-- A opção `enabled` liga e desliga só esta linha. Ela segue o idioma do HUD (veja [Idioma](#idioma)): português em `pt-BR` e inglês nos demais.
+- The weather uses the larger of the token percentage and the MB percentage, so it can change because of attachments even with few tokens.
+- The context percentage is not repeated here, as the HUD's context line already shows it. Neither is the last turn's growth, which the HUD's extras row shows (`turnGrowthTokens`).
+- The size in MB is recomputed at the end of each turn.
+- With the HUD above the prompt, a blank line separates the bar from the chat.
+- The `enabled` option turns only this line on and off. It follows the HUD's language (see [Language](#language)): Portuguese for `pt-BR` and English otherwise.
 
-## O que vem do HUD
+## What comes from the HUD
 
-- **Tudo o que o claude-hud mostra**: modelo e esforço, projeto e branch do git com as alterações, medidores de contexto e de uso, ferramentas em execução, subagentes e todos.
-- **Avisos antes de bater na parede**: toasts nos níveis de contexto e de cota que você escolher; quando um limite esgota no ritmo atual; limites semanais por modelo, como o do Fable; os tokens restantes até a compactação automática; o que a próxima mensagem recacheia quando o cache do prompt expirou; um turno que fez o contexto crescer muito (e quanto, ao lado dos turnos recentes); e muitas alterações sem commit ou commits sem push.
-- **Gasto**: o gasto de hoje contra um orçamento diário e os últimos 7 dias em sparkline.
-- **Resumo da tarefa em uma linha** e `/synapse detail`, com tempo por ferramenta, custo e crescimento de contexto dos últimos turnos, subagentes e todos.
-- **Doze temas**: neon, rainbow, emoji, temas anime com mascote kaomoji (sakura, kawaii, mecha, shonen), Tokyo Night, Matrix, Nerd Font e powerline.
-- **Toast de fim de turno** (com som opcional no macOS) para turnos longos, e o estado do Remote Control com os clientes conectados.
+- **Everything claude-hud shows**: model and effort, project and git branch with its changes, context and usage gauges, the running tools, subagents and todos.
+- **Warnings before you hit a wall**: toasts at the context and quota levels you pick, when a limit runs out at the current pace, per-model weekly limits such as Fable's, the tokens left before auto-compaction, what the next message re-caches once the prompt cache has expired, a turn that grew the context a lot (by how much, beside the recent turns), and too many uncommitted changes or unpushed commits.
+- **Spend**: today's spend against a daily budget, and the last 7 days as a sparkline.
+- **A one-line task summary**, and `/synapse detail` for per-tool times, the last turns' cost and context growth, subagents and todos.
+- **Twelve themes**: neon, rainbow, emoji, anime themes with a kaomoji mascot (sakura, kawaii, mecha, shonen), Tokyo Night, Matrix, Nerd Font and powerline.
+- **Turn-done toast** (with an optional chime on macOS) for long turns, and the Remote Control state with the clients attached.
 
-## Instalação
+## Install
 
 ```
 /plugin marketplace add fabioivan/claude-code-mods
@@ -47,174 +49,174 @@ A última linha da barra mostra o clima do contexto, o tamanho em MB do que é e
 /reload-plugins
 ```
 
-Ou, pela linha de comando:
+Or from the command line:
 
 ```sh
 claude plugin marketplace add fabioivan/claude-code-mods
 claude plugin install synapse-rate-limit@fabioivan-mods
 ```
 
-O plugin lê os arquivos de configuração do próprio claude-hud, então uma configuração existente dele continua valendo. `/synapse` mostra ou esconde a barra e `/synapse theme` escolhe o tema.
+It reads claude-hud's own config files, so an existing claude-hud setup carries over. `/synapse` toggles the bar and `/synapse theme` picks a theme.
 
-## Comandos
+## Commands
 
-| Comando | Efeito |
+| Command | Effect |
 | --- | --- |
-| `/synapse` | Mostra ou esconde a barra |
-| `/synapse on` / `/synapse off` | Mostra / esconde explicitamente |
-| `/synapse detail` | Abre ou fecha o painel de detalhes: chamadas, tempo total e médio e falhas de cada ferramenta; os últimos 8 turnos com tempo, custo e crescimento de contexto; subagentes; todos; gasto de hoje e da semana |
-| `/synapse theme` | Pergunta o tema |
-| `/synapse theme <nome>` / `next` / `reset` | Troca o tema, passa ao próximo ou volta ao `classic` |
+| `/synapse` | Shows or hides the bar |
+| `/synapse on` / `/synapse off` | Shows / hides it explicitly |
+| `/synapse detail` | Opens or closes the detail pane: each tool's calls, total and average time and failures; the last 8 turns with their time, cost and context growth; subagents; todos; today's and the week's spend |
+| `/synapse theme` | Asks which theme |
+| `/synapse theme <name>` / `next` / `reset` | Switches the theme, cycles to the next, or goes back to `classic` |
 
-O comando era `/hud` no plugin original. `/synapse` também funciona no meio de um turno, e o botão **HUD** no rodapé do prompt faz o mesmo que `/synapse` sozinho.
+The command was `/hud` in the original plugin. `/synapse` runs mid-turn too, and the **HUD** button in the prompt footer does what `/synapse` alone does.
 
-## Configuração
+## Configuration
 
-**Arquivos do claude-hud.** `~/.claude/plugins/claude-hud/config.json` e `~/.claude/claude-hud.json`.
+**claude-hud's files.** `~/.claude/plugins/claude-hud/config.json` and `~/.claude/claude-hud.json`.
 
-**Opções do mod** (`/config`, ou `pluginConfigs.synapse-rate-limit.options` no settings):
+**Mod options** (`/config`, or `pluginConfigs.synapse-rate-limit.options` in settings):
 
-| Opção | Padrão | Descrição |
+| Option | Default | Description |
 | --- | --- | --- |
-| `language` | `auto` | Idioma do HUD: `auto` (o do Claude Code), `en` ou `pt-BR` (veja [Idioma](#idioma)) |
-| `enabled` | `true` | Linha do synapse (clima, MB, tokens, gráfico) |
-| `visible` | `true` | Mostra o HUD. `/synapse`, `/synapse on`, `/synapse off` e o botão do rodapé alteram a opção, que é mantida entre sessões |
-| `footerButton` | `true` | Botão **HUD** no rodapé do prompt |
-| `position` | `above` | `above` (faixa acima do prompt) ou `below` (abaixo, ao lado da linha de dicas, onde ficava a statusline) |
-| `theme` | `classic` | Tema (veja abaixo) |
-| `showMascot` | `true` | Mascote dos temas anime |
-| `extraCmd` | vazio | `--extra-cmd` do claude-hud: comando de shell cuja saída vira um rótulo (exige `CLAUDE_HUD_ALLOW_EXTRA_CMD=1`) |
-| `debug` | `false` | Registra a ferramenta `mcp__synapse-rate-limit__synapse_debug` |
-| `notifyAfterSeconds` | `0` | Toast quando um turno dura pelo menos isso; `0` desliga |
-| `notifySound` | `true` | Som junto com o toast de fim de turno (macOS) |
-| `contextAlerts` | vazio | Percentuais de contexto que disparam toast, ex.: `80,90` |
-| `usageAlerts` | vazio | Percentuais dos limites de 5h, 7d ou semanal por modelo que disparam toast |
-| `showForecast` | `true` | Previsão de esgotamento do limite de uso |
-| `dailyBudgetUsd` | `0` | Orçamento diário em USD; `0` desliga |
-| `showHistory` | `false` | Sparkline do gasto dos últimos 7 dias e sequência de dias de uso |
-| `summaryEveryTurns` | `5` | Resumo da tarefa a cada N turnos; `0` desliga |
-| `compactWarnPercent` | `60` | Mostra os tokens restantes até a compactação a partir deste percentual; `0` desliga |
-| `coldCacheTokens` | `20000` | Aviso de cache expirado a partir deste tamanho de contexto; `0` desliga |
-| `turnGrowthTokens` | `20000` | Mostra o crescimento do contexto quando um turno passa deste valor; `0` desliga |
-| `gitDirtyWarn` | `20` | Aviso de arquivos alterados e não commitados; `0` desliga |
-| `gitAheadWarn` | `5` | Aviso de commits não enviados; `0` desliga |
-| `showAgents` | `false` | Linhas de subagentes (o Claude Code já lista os em execução, com tempo e tokens; o painel de detalhes continua listando) |
+| `language` | `auto` | The HUD's language: `auto` (Claude Code's), `en` or `pt-BR` (see [Language](#language)) |
+| `enabled` | `true` | The synapse line (weather, MB, tokens, chart) |
+| `visible` | `true` | Show the HUD. `/synapse`, `/synapse on`, `/synapse off` and the footer button change the option, which is kept across sessions |
+| `footerButton` | `true` | The **HUD** button in the prompt footer |
+| `position` | `above` | `above` (a band above the prompt) or `below` (beside the hint line, where the statusline sat) |
+| `theme` | `classic` | Theme (see below) |
+| `showMascot` | `true` | The anime themes' mascot |
+| `extraCmd` | empty | claude-hud's `--extra-cmd`: a shell command whose output becomes a label (needs `CLAUDE_HUD_ALLOW_EXTRA_CMD=1`) |
+| `debug` | `false` | Registers the `mcp__synapse-rate-limit__synapse_debug` tool |
+| `notifyAfterSeconds` | `0` | Toast when a turn runs at least this long; `0` turns it off |
+| `notifySound` | `true` | A chime with the turn-done toast (macOS) |
+| `contextAlerts` | empty | Context percentages that raise a toast, e.g. `80,90` |
+| `usageAlerts` | empty | Percentages of the 5-hour, 7-day or model-scoped weekly limits that raise a toast |
+| `showForecast` | `true` | Forecast of when a usage limit runs out |
+| `dailyBudgetUsd` | `0` | Daily budget in USD; `0` turns it off |
+| `showHistory` | `false` | The last 7 days' spend as a sparkline, with the streak of days in use |
+| `summaryEveryTurns` | `5` | Summarize the task every N turns; `0` turns it off |
+| `compactWarnPercent` | `60` | Show the tokens left before auto-compaction from this percent; `0` turns it off |
+| `coldCacheTokens` | `20000` | Expired-cache warning from this context size; `0` turns it off |
+| `turnGrowthTokens` | `20000` | Show the context growth when a turn grows it by at least this much; `0` turns it off |
+| `gitDirtyWarn` | `20` | Warn on this many changed, uncommitted paths; `0` turns it off |
+| `gitAheadWarn` | `5` | Warn on this many unpushed commits; `0` turns it off |
+| `showAgents` | `false` | Subagent lines (Claude Code already lists running subagents, with their time and tokens; the detail pane still lists them) |
 
-## Idioma
+## Language
 
-Um só idioma vale para o HUD inteiro: as linhas do claude-hud, o que o mod acrescenta (alertas, linha de extras, painel de detalhes, mensagens de `/synapse`, resumo da tarefa) e a linha do synapse. A opção `language` escolhe:
+One language applies to the whole HUD: claude-hud's lines, what the mod adds (alerts, the extras row, the detail pane, `/synapse` messages, the task summary) and the synapse line. The `language` option picks it:
 
-| Valor | Efeito |
+| Value | Effect |
 | --- | --- |
-| `auto` (padrão) | Segue o idioma do próprio Claude Code (`language` no `settings.json`): `Portugues`, `português`, `pt-BR` ou `Brazilian Portuguese` dão português; `English` ou `en` dão inglês. Se for outro idioma, ou não houver nenhum, vale o `language` do claude-hud |
-| `en` | Inglês |
-| `pt-BR` | Português do Brasil |
+| `auto` (default) | Follows Claude Code's own language (`language` in `settings.json`): `Portugues`, `português`, `pt-BR` or `Brazilian Portuguese` give Portuguese; `English` or `en` give English. Any other language, or none, falls back to claude-hud's `language` |
+| `en` | English |
+| `pt-BR` | Brazilian Portuguese |
 
-- O `settings.json` é relido a cada atualização da barra, então mudar o idioma do Claude Code muda o HUD sem reiniciar.
-- Como último recurso em `auto`, o `language` do claude-hud (`en`, `zh-Hans`, `zh-Hant`, `ja`, `ko`, `es`, `fr`, `de`, `pt-BR`, `ru`) continua valendo para o HUD. A linha do synapse só tem texto em português e inglês, e usa o inglês nos outros idiomas.
-- Os nomes e as descrições das opções (em `/config`) e a descrição do comando `/synapse` ficam fixos: o manifesto do plugin não é traduzido.
+- `settings.json` is read again on each refresh of the bar, so changing Claude Code's language changes the HUD without a restart.
+- As the last resort under `auto`, claude-hud's `language` (`en`, `zh-Hans`, `zh-Hant`, `ja`, `ko`, `es`, `fr`, `de`, `pt-BR`, `ru`) still applies to the HUD. The synapse line only has Portuguese and English text, and uses English for the other languages.
+- The options' names and descriptions (in `/config`) and the `/synapse` command's description stay fixed: a plugin's manifest is not translated.
 
-## Temas
+## Themes
 
-`theme` (em `/config`, padrão `classic`: o visual original do claude-hud) ou `/synapse theme <nome>` ao vivo. Sem argumento, `/synapse theme` pergunta em um diálogo (oferece os quatro seguintes; qualquer outro vai em Other; se for dispensado, ou sob `-p`, lista todos com uma amostra). `next` percorre os temas e `reset` volta ao `classic`. O comando grava a opção `theme`, então `/config` a mostra e ela vale nas próximas sessões.
+`theme` (in `/config`, default `classic`: claude-hud's own look) or `/synapse theme <name>` live. `/synapse theme` alone asks which in a dialog (the next four offered, any other typed under Other; dismissed, or under `-p`, it lists them with a sample), `/synapse theme next` cycles, `/synapse theme reset` goes back to `classic`. The command writes the `theme` option, so `/config` shows it and it is kept across sessions.
 
-| Tema | Visual |
+| Theme | Look |
 | --- | --- |
-| `classic` | claude-hud como vem de fábrica |
-| `neon` | cyberpunk: truecolor neon, `⬢ ◆ ◈ ⚡`, barras `▰▱`, separadores ` ❯ ` |
-| `rainbow` | um matiz por elemento, células de barra preenchidas e o nome do modelo em degradê |
+| `classic` | claude-hud as it ships |
+| `neon` | cyberpunk: neon truecolor, `⬢ ◆ ◈ ⚡`, `▰▱` bars, ` ❯ ` separators |
+| `rainbow` | a hue per element, filled bar cells and the model name along a rainbow gradient |
 | `emoji` | `🤖 📂 🌿 🧠 ⚡ 📅 ⏳ ✅` |
-| `sakura` | rosa pastel, `🌸 🎀 🍡 💗`, barras `✿`, mascote kaomoji `(◕‿◕)♡` |
-| `kawaii` | pastel, `「Opus」`, barras `●○`, mascote gato `ฅ^•ω•^ฅ` |
-| `mecha` | roxo, verde e laranja, `UNIT·Opus◤`, medidores `SYNC` / `PWR`, mascote robô `[•_•]` |
-| `shonen` | vermelho, laranja e dourado, `🔥 ⭐ 🍥 💥`, barras em degradê, mascote `(ง •̀_•́)ง` |
-| `tokyo-night` | a paleta Tokyo Night, glifos discretos |
-| `matrix` | verde sobre preto, barras `▮▯`, separadores ` ┊ ` |
-| `nerd` | símbolos Nerd Font (exige uma Nerd Font) |
-| `powerline` | símbolos Nerd Font em segmentos powerline (exige uma Nerd Font) |
+| `sakura` | pastel pink, `🌸 🎀 🍡 💗`, `✿` bars, a kaomoji mascot `(◕‿◕)♡` |
+| `kawaii` | pastel, `「Opus」`, `●○` bars, a cat mascot `ฅ^•ω•^ฅ` |
+| `mecha` | purple, green and orange, `UNIT·Opus◤`, `SYNC` / `PWR` gauges, a robot mascot `[•_•]` |
+| `shonen` | red-orange-gold, `🔥 ⭐ 🍥 💥`, gradient bars, a mascot `(ง •̀_•́)ง` |
+| `tokyo-night` | the Tokyo Night palette, quiet glyphs |
+| `matrix` | green on black, `▮▯` bars, ` ┊ ` separators |
+| `nerd` | Nerd Font symbols (needs a Nerd Font) |
+| `powerline` | Nerd Font symbols on powerline segments (needs a Nerd Font) |
 
-Todos os temas na mesma sessão de exemplo: [assets/themes/gallery.png](assets/themes/gallery.png); uma imagem por tema em `assets/themes/<tema>.png`.
+Every theme on the same sample session: [assets/themes/gallery.png](assets/themes/gallery.png); one still per theme in `assets/themes/<theme>.png`.
 
-- **Paleta**: as cores do tema entram por cima das `colors` do claude-hud; uma cor definida na configuração do próprio claude-hud (diferente do padrão) é mantida.
-- **Mascote** (`showMascot`, ligado): os temas anime põem um rosto no início da linha de extras: calmo, ocupado enquanto uma ferramenta roda, preocupado a partir de 70% de contexto (ou 90% de cota), em pânico a partir de 85% e nocauteado quando um limite é atingido.
-- **Largura**: os glifos são desenhados pelo claude-hud, que mede a largura deles ao quebrar linhas; os separadores não são mais largos que ` │ `; o powerline soma 2 células a cada linha. Os emojis usados são só os de apresentação padrão (sem U+FE0F).
-- **Limite conhecido**: o claude-hud mantém um selo `[Modelo | Provedor]` (Bedrock, Vertex) inteiro pelo `[` inicial; os temas que tiram os colchetes perdem isso, então em largura estreita esse selo pode quebrar em ` | `.
+- **Palette**: the theme's colors go over claude-hud's `colors`; a color set in claude-hud's own config (off its default) stays.
+- **Mascot** (`showMascot`, on): the anime themes put a face first in the extras row: calm, busy while a tool runs, worried from 70% context (or 90% quota), panicking from 85%, knocked out when a limit is reached.
+- **Width**: glyphs are drawn by claude-hud, so its wrapping measures them; separators are no wider than ` │ `; powerline adds 2 cells to a row. Emoji are default-presentation ones only (no U+FE0F).
+- **Known limit**: claude-hud keeps a `[Model | Provider]` badge (Bedrock, Vertex) whole by its leading `[`; themes that drop the brackets lose that, so at a narrow width such a badge can wrap at ` | `.
 
-## Valores derivados em vez de informados
+## Derived rather than reported
 
-A stdin da statusline do Claude Code traz estes campos; a API de mods não, então o mod os calcula:
+Claude Code's statusline stdin carries these; the mod API does not, so the mod works them out:
 
-- `prompt_cache`: o relógio recomeça na última requisição da thread principal (de `turn.step`, ou da última resposta da thread principal no transcript) e corre pelo TTL que a última escrita no cache usou (`1h` se escreveu no nível de 1 hora, senão `5m`). O `hit_ratio` é a entrada lida do cache sobre toda a entrada da thread principal, na sessão.
-- `model_scoped` (limites semanais por modelo, como o do Fable): vêm do cache do próprio Claude Code para o endpoint de uso, `cachedUsageUtilization` em `.claude.json` (relido só quando o arquivo muda, e ignorado depois de uma hora, como o leitor do Claude Code). Nenhuma requisição é feita.
-- `session_name`: o título de `/rename` do transcript, senão o título gerado, senão o slug.
-- `workspace.repo`: extraído da URL do remote em `$.session.repo()`.
-- `output_style`: `outputStyle` das configurações.
-- Antes da primeira requisição ao modelo na sessão, `current_usage` é o total de contexto do engine, sem cache, e o esforço é o `effortLevel` das configurações; ambos chegam com o primeiro `turn.step` e ficam no estado da sessão entre recargas.
-- `total_api_duration_ms` conta as requisições vistas desde que o mod foi habilitado na sessão.
+- `prompt_cache`: the clock restarts at the last main-thread request (from `turn.step`, else the last main-thread response in the transcript) and runs for the TTL the last cache write used (`1h` when it wrote the 1-hour tier, else `5m`). `hit_ratio` is cache-read input over all main-thread input, across the session.
+- `model_scoped` (the model-scoped weekly limits, such as Fable's): they come from Claude Code's own cache of its usage endpoint, `cachedUsageUtilization` in `.claude.json` (read again only when the file changes, nothing once it is over an hour old, as Claude Code's own reader). No request is made.
+- `session_name`: the transcript's `/rename` title, else its generated title, else its slug.
+- `workspace.repo`: parsed from `$.session.repo()`'s remote URL.
+- `output_style`: `outputStyle` from settings.
+- Before the session's first model request, `current_usage` is the engine's context total, uncached, and the effort is `effortLevel` from settings; both arrive with the first `turn.step` and are kept in session state across reloads.
+- `total_api_duration_ms` counts the requests seen since the mod was enabled in the session.
 
-## Acréscimos do HUD sobre o claude-hud
+## Added by the HUD over claude-hud
 
-- **Remote Control**: ` │ ⇄ Controle remoto` ao fim da primeira linha enquanto o Remote Control da sessão está ligado, com link para a sessão no claude.ai, seguido dos clientes conectados por superfície (`conectado: celular · web/desktop×2`). O app do Claude e o claude.ai não disparam `session.attach`, então um prompt ou comando que chega pelo Remote Control marca `conectado` até a ponte mudar. A ponte fica em `~/.claude/sessions/<pid>.json` e é lida a cada 3 s; a barra é redesenhada quando muda.
-- **Linha de extras**: anexada à última linha do claude-hud quando cabe na largura, senão em uma linha própria abaixo. Partes que não cabem saem: primeiro o mascote do tema, depois o sparkline de 7 dias e por último o aviso `⚠` do git. Cada parte só aparece quando tem algo a dizer:
-  - `✎` a tarefa em uma linha: um `$.model.fork` da conversa (servido do cache do prompt) após o primeiro turno e a cada `summaryEveryTurns` turnos (padrão 5; 0 desliga). É pulado enquanto o transcript tiver uma lista de tarefas com trabalho pendente (a lista já diz o que o modelo faz), e uma linha antiga sai de cena nesse meio-tempo.
-  - **Previsão de uso** (`showForecast`): quando o limite de 5 horas, de 7 dias ou semanal por modelo esgota, se isso acontecer antes do reset. O de 5 horas segue o ritmo da última hora, depois que a sessão tem dez minutos de leituras; os semanais seguem o ritmo desde o início da janela.
-  - **Tokens até a compactação** (`42k até a compactação`), quando o contexto chega a `compactWarnPercent` do caminho (padrão 60; 0 desliga). O limite é o do próprio Claude Code (`$.session.usage({ breakdown: 'summary' })`), relido quando a janela de contexto muda.
-  - **Cache expirado** (`cache frio: a próxima mensagem recacheia 120k`): quando um cache que a sessão usou expirou, o contexto que a próxima mensagem escreve de novo, se for pelo menos `coldCacheTokens` (padrão 20000; 0 desliga).
-  - **Crescimento do contexto** (`último turno +98k ▂▁█`): quando o último turno aumentou o contexto em pelo menos `turnGrowthTokens` (padrão 20000; 0 desliga), de quanto, e um sparkline do crescimento dos últimos 8 turnos (uma compactação conta como nenhum), para destacar o turno que encheu a janela.
-  - **Gasto de hoje** entre sessões contra `dailyBudgetUsd` (0 desliga), a partir do livro de custos diários do claude-hud; amarelo a partir de 80%, vermelho acima.
-  - **Gasto dos últimos 7 dias** em sparkline e a sequência de dias de uso (`showHistory`, desligado por padrão); o gasto fica no armazenamento do mod por 60 dias de qualquer forma.
-  - `⚠` caminhos não commitados a partir de `gitDirtyWarn` (padrão 20) e commits não enviados a partir de `gitAheadWarn` (padrão 5); 0 desliga cada um.
-- **Alertas** (desligados por padrão): um toast quando o contexto atinge cada valor de `contextAlerts` (ex.: `80,90`) e quando o limite de 5 horas, de 7 dias ou semanal por modelo atinge cada valor de `usageAlerts`. Vale uma vez por limiar, e só dispara de novo depois que o medidor cai 5 pontos abaixo dele (um `/compact`, um reset).
-- **Fim de turno**: um turno da thread principal que durou `notifyAfterSeconds` ou mais (padrão 0, desligado; ex.: 60) termina com um toast e, com `notifySound`, um som curto (macOS).
-- **Linhas de subagentes**: desligadas por padrão (`showAgents`).
-- **Redesenho do prompt**: logo após uma compactação e após `/model` (mostrando o novo modelo antes do primeiro passo).
-- **Ajustes visuais sobre o claude-hud**: os separadores ` │ ` e ` | ` ficam esmaecidos; o arquivo de uma ferramenta em execução aparece relativo ao diretório da sessão (`◐ Read src/a.ts`); a duração da sessão é `⏱ 12m` e o cache do prompt é mostrado sem o `⏱️` de largura de emoji.
+- **Remote Control**: ` │ ⇄ Remote Control` at the end of the first line while the session's Remote Control is on, linked to the session on claude.ai, then the attached clients by surface (`connected: phone · web/desktop×2`). The Claude app and claude.ai raise no `session.attach`, so a prompt or command arriving over Remote Control marks `connected` until the bridge changes. The bridge is in `~/.claude/sessions/<pid>.json` and is read every 3 s; the bar is redrawn on a change.
+- **An extras row**: appended to claude-hud's last line when both fit the width, else a line of its own under it; parts that do not fit leave it, a theme's mascot first, then the 7-day sparkline, and the `⚠` git warning last. Each part shows only when it has something to say:
+  - `✎` the task in one line: a `$.model.fork` of the conversation (served from the prompt cache) after the first turn and every `summaryEveryTurns` turns (default 5; 0 off). Skipped while the transcript holds a task list with work left (the list already says what the model is doing), and an older line steps aside meanwhile.
+  - **Usage forecast** (`showForecast`): when the 5-hour, 7-day or a model-scoped weekly limit runs out, if that comes before it resets: the 5-hour limit at the last hour's pace once the session has ten minutes of readings, the weekly ones at the rate since their window began.
+  - **Tokens left before auto-compaction** (`42k to auto-compact`), once the context is `compactWarnPercent` of the way there (default 60; 0 off). The threshold is Claude Code's own (`$.session.usage({ breakdown: 'summary' })`), read again when the context window changes.
+  - **Expired prompt cache** (`cache cold: next message re-caches 120k`): once a cache the session used has expired, the context the next message writes to it again, when that is at least `coldCacheTokens` (default 20000; 0 off).
+  - **Context growth** (`last turn +98k ▂▁█`): when the last turn grew the context by at least `turnGrowthTokens` (default 20000; 0 off), by how much, then a sparkline of the last 8 turns' growth (a compaction counts as none), so the turn that filled the window stands out.
+  - **Today's spend** across sessions against `dailyBudgetUsd` (0 off), from claude-hud's daily-cost ledger; yellow from 80%, red past it.
+  - **The last 7 days' spend** as a sparkline and the streak of days in use (`showHistory`, off by default); the spend is kept in the mod's store for 60 days either way.
+  - `⚠` uncommitted paths at or past `gitDirtyWarn` (default 20) and unpushed commits at or past `gitAheadWarn` (default 5); 0 turns either off.
+- **Alerts** (off by default): a toast when context use reaches each of `contextAlerts` (e.g. `80,90`), and the 5-hour, 7-day or a model-scoped weekly limit each of `usageAlerts`; once per threshold, again only after the gauge drops 5 points below it (a `/compact`, a reset).
+- **Turn done**: a turn of the main thread that ran `notifyAfterSeconds` or longer (default 0, off; e.g. 60) ends with a toast and, with `notifySound`, a short chime (macOS).
+- **Subagent lines**: off by default (`showAgents`).
+- **Prompt redraws**: right after a compaction, and after `/model` (showing the new model before its first step).
+- **Display tweaks over claude-hud**: the ` │ ` and ` | ` separators are dimmed; a running tool's file shows relative to the session directory (`◐ Read src/a.ts`); the session duration is `⏱ 12m` and the prompt cache is shown without the emoji-width `⏱️`.
 
-## Não trazido do claude-hud
+## Not carried over
 
-- Links OSC 8 `file://` (o caminho do projeto): um `Link` só aceita https, então o texto fica e o link some. Links https (a branch no GitHub) continuam clicáveis.
-- `worktree` (nome, caminho e branch de uma sessão `--worktree`): não existe na API de mods.
+- OSC 8 `file://` links (the project path): a `Link` takes https only, so the text is kept and the link dropped. https links (a GitHub branch) stay clickable.
+- `worktree` (a `--worktree` session's name, path and branch): not in the mod API.
 
-## Diferenças em relação ao `hud` original
+## Differences from the original `hud`
 
-- Comando `/synapse` no lugar de `/hud`; ferramenta de debug `synapse_debug`.
-- Estado e chaves de configuração sob o nome `synapse-rate-limit`, sem conflito com o `hud`.
-- Linha extra do synapse (clima, MB, tokens e gráfico) e a opção `enabled`.
-- Opção `language` (`auto`, `en`, `pt-BR`), que segue o idioma do Claude Code.
-- Espaço em branco entre o chat e a barra, quando ela fica acima do prompt.
-- Os caches continuam em `plugins/claude-hud-mod`, o mesmo diretório do `hud` original, então os dois compartilham o livro de custos diários.
+- The `/synapse` command instead of `/hud`; the debug tool is `synapse_debug`.
+- State and config keys live under the `synapse-rate-limit` name, so they do not clash with `hud`.
+- The extra synapse line (weather, MB, tokens and chart) and the `enabled` option.
+- The `language` option (`auto`, `en`, `pt-BR`), which follows Claude Code's language.
+- A blank line between the chat and the bar, when it sits above the prompt.
+- Caches stay in `plugins/claude-hud-mod`, the same directory as the original `hud`, so the two share the daily-cost ledger.
 
-## Desenvolvimento
+## Development
 
 ```sh
 claude plugin validate .
 claude plugin test .
-claude --plugin-dir /caminho/para/synapse-rate-limit
+claude --plugin-dir /path/to/synapse-rate-limit
 ```
 
-### Estrutura
+### Layout
 
-- `hooks/register.tsx`: os hooks e tudo o que chama `$` (o engine só segue `$` dentro deste arquivo): o início da sessão, os eventos do turno, `/synapse`, o laço de atualização, alertas, gasto, resumo e os hooks de renderização. Os outros módulos recebem closures sobre `$` (`Io`, `SessionApi`).
-- `hooks/synapse-row.ts`: monta a linha do synapse.
-- `hooks/synapse-format.ts`: clima (com os textos em inglês e português), formatação de MB e tokens, gráfico.
-- `hooks/language.ts`: resolve o idioma do HUD (opção do mod, idioma do Claude Code ou o do claude-hud).
-- `hooks/config.ts`: as opções do mod, lidas uma vez em um `Config` tipado.
-- `hooks/stdin.ts`: monta a stdin da statusline que o claude-hud espera a partir da sessão (uso, configurações, repositório, passos do turno) e do transcript; os fatos do host que o claude-hud lê (env, plataforma, memória).
-- `hooks/render.ts`: uma passada: as linhas do claude-hud, o rótulo do Remote Control, o gasto de hoje; as contagens do git para o aviso.
-- `hooks/remote.ts`: a ponte do Remote Control (de `sessions/<pid>.json`) e seu rótulo.
-- `hooks/summary.ts`: a resposta do resumo da tarefa, reduzida a uma linha.
-- `hooks/draw.tsx`: as linhas (acima ou abaixo do prompt) e o painel `/synapse detail`, sobre os elementos que um hook de renderização resolveu.
-- `hooks/live.ts`: o que o módulo guarda entre passadas fora de `$.state` e o tema em uso.
-- `hooks/kit/`: leitores de opções e escritas em `/config`.
-- `hooks/transcript-feed.ts`: lê o transcript uma vez e de forma incremental (só as linhas novas) para o mod todo.
-- `hooks/hud/`: o `src/` do claude-hud (MIT, ver `LICENSE.claude-hud`), mantido perto do original, com alterações locais: `main(source)` recebe a stdin do mod; as linhas vão para um sink em vez de `console.log`; sete locales extras (`ja`, `ko`, `es`, `fr`, `de`, `pt-BR`, `ru`); `setConfigPatch` aplica as opções do mod por cima da configuração; o git roda por `$.process.run`; e `render/theme.ts` leva os glifos dos temas.
-- `hooks/shims/`: as APIs do Node que o claude-hud importa, sobre `$`.
-- `hooks/ansi.ts`, `hooks/i18n.ts`, `hooks/themes.ts`, `hooks/extras.ts`: escapes SGR em spans estilizados, as strings do mod em todos os idiomas, os temas e os auxiliares do que o mod acrescenta.
+- `hooks/register.tsx`: the hooks, and everything that calls `$` (the engine follows `$` only within this file): the session's start, the turn's events, `/synapse`, the refresh loop, alerts, spend and summary, and the render hooks. The other modules get closures over `$` (`Io`, `SessionApi`).
+- `hooks/synapse-row.ts`: builds the synapse line.
+- `hooks/synapse-format.ts`: the weather (with its English and Portuguese text), MB and token formatting, the chart.
+- `hooks/language.ts`: resolves the HUD's language (the mod's option, Claude Code's language, or claude-hud's).
+- `hooks/config.ts`: the mod's options, read once into a typed `Config`.
+- `hooks/stdin.ts`: builds the statusline stdin claude-hud expects from the session (usage, settings, repo, turn steps) and the transcript; the host facts claude-hud reads (env, platform, memory).
+- `hooks/render.ts`: one pass: claude-hud's lines, the Remote Control label, today's spend; the git counts for the warning.
+- `hooks/remote.ts`: Remote Control's bridge (from `sessions/<pid>.json`) and its label.
+- `hooks/summary.ts`: the task summary's reply, cleaned to one line.
+- `hooks/draw.tsx`: the rows (above or below the prompt) and the `/synapse detail` pane, over the elements a render hook resolved.
+- `hooks/live.ts`: what the module keeps between passes outside `$.state`, and the theme in use.
+- `hooks/kit/`: option readers and `/config` writes.
+- `hooks/transcript-feed.ts`: reads the transcript once and incrementally (only appended lines) for the whole mod.
+- `hooks/hud/`: claude-hud's `src/` (MIT, see `LICENSE.claude-hud`), kept close to upstream, with local changes: `main(source)` takes the stdin from the mod; lines go to a sink instead of `console.log`; seven more locales (`ja`, `ko`, `es`, `fr`, `de`, `pt-BR`, `ru`); `setConfigPatch` lays the mod's options over the loaded config; git runs through `$.process.run`; and `render/theme.ts` carries the themes' glyphs.
+- `hooks/shims/`: the Node APIs claude-hud imports, over `$`.
+- `hooks/ansi.ts`, `hooks/i18n.ts`, `hooks/themes.ts`, `hooks/extras.ts`: SGR escapes to styled spans, the mod's own strings in every language, the themes, and the helpers for what the mod adds.
 
-### Atualizando a partir do original
+### Updating from upstream
 
-Copie o novo `src/` do claude-hud sobre `hooks/hud/` (sem `windows-git-worker.ts`), reaponte os imports `node:*` para `../shims/*.js` (`node:fs/promises` em `fs_promises.js`), reaplique as alterações listadas acima (passe qualquer glifo novo por `render/theme.ts`) e rode `claude plugin validate .` e `claude plugin test .`.
+Copy the new `src/` of claude-hud over `hooks/hud/` (minus `windows-git-worker.ts`), re-point `node:*` imports at `../shims/*.js` (`node:fs/promises` at `fs_promises.js`), re-apply the changes listed above (route any new hardcoded glyph through `render/theme.ts`), then run `claude plugin validate .` and `claude plugin test .`.
 
-## Licença
+## License
 
-MIT. O código em `hooks/hud/` vem do claude-hud (Jarrod Watts), também sob MIT: ver `LICENSE.claude-hud`. A conversão para mod é do [`hud`](https://github.com/hoobnn/hoobnn-agent-mods/tree/main/claude-code/hud) (hoobnn).
+MIT. The code in `hooks/hud/` comes from claude-hud (Jarrod Watts), also under MIT: see `LICENSE.claude-hud`. The conversion to a mod is by [`hud`](https://github.com/hoobnn/hoobnn-agent-mods/tree/main/claude-code/hud) (hoobnn).
