@@ -14,7 +14,7 @@ Marketplace de mods para o Claude Code.
 
 | Plugin | Descrição |
 | --- | --- |
-| [`synapse-rate-limit`](./synapse-rate-limit) | HUD completo (baseado no claude-hud) mais a linha do synapse: clima, MB do contexto/anexos, tokens, gráfico dos últimos turnos e variação. |
+| [`synapse-rate-limit`](./synapse-rate-limit) | HUD completo (baseado no mod `hud` e no claude-hud) com alertas, previsão de limite, orçamento, painel de detalhes e 12 temas, mais a linha do synapse: clima, MB do contexto/anexos, tokens, gráfico dos últimos turnos e variação. |
 
 Desabilite o plugin `hud` original ao usar o `synapse-rate-limit`, para a barra não aparecer duas vezes.
 
