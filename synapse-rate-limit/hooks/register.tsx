@@ -21,6 +21,7 @@ import { setTranscriptProvider } from './hud/transcript.js'
 import type { StdinData } from './hud/types.js'
 import { FIVE_HOUR_WINDOW_MS, SEVEN_DAY_WINDOW_MS } from './hud/usage-pace.js'
 import { m, summaryPrompt } from './i18n.js'
+import { resolveLanguage } from './language.js'
 import { isPickerOpen } from './kit/band.js'
 import { cellWidth, dockFits, drawPet } from './kit/pet.js'
 import { keptRows, migrateStore, persist, switchArg } from './kit/prefs.js'
@@ -161,7 +162,8 @@ export const register: Register = (on, options) => {
   const config = readConfig(options)
   useTheme(config.theme)
   setConfigPatch(hud => {
-    const themed = applyPalette(hud, live.theme)
+    // O idioma: a opção do mod, ou o do Claude Code em `auto`, ou o que o claude-hud já tinha.
+    const themed = { ...applyPalette(hud, live.theme), language: resolveLanguage(config.language, live.claudeLanguage, hud.language) }
     // Claude Code lists running subagents itself, with their time and tokens; claude-hud's
     // agent lines would repeat them, so they show only when asked for.
     return config.hasAgents ? themed : { ...themed, display: { ...themed.display, showAgents: false } }
@@ -219,6 +221,7 @@ export const register: Register = (on, options) => {
           read($, steps),
           $.session.repo().catch(() => null),
         ])
+        live.claudeLanguage = (settings as { language?: unknown }).language
         return { id, cwd, root, model, usage, version, settings: settings as Record<string, unknown>, step, repo }
       },
       // A value from before 0.4.3 (bare ids) is dropped rather than misread.
@@ -351,6 +354,7 @@ export const register: Register = (on, options) => {
     if (keptTheme) useTheme(keptTheme)
     await update($, isHidden, () => !config.isVisible)
 
+    live.claudeLanguage = ((await $.settings.read().catch(() => ({}))) as { language?: unknown }).language
     await loadHostFacts(io, config.extraCmd)
     // claude-hud sets its language in each pass; the command's description is read before the first.
     await runWithFacts(async () => setLanguage((await loadConfig()).language))

@@ -1,6 +1,6 @@
 {
   "name": "synapse-rate-limit",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens, gráfico dos últimos turnos e variação.",
   "author": {
     "name": "Fabio Borchardt",
@@ -18,10 +18,21 @@
   ],
   "types": "./types/index.d.ts",
   "userConfig": {
+    "language": {
+      "type": "string",
+      "title": "Language",
+      "description": "The HUD's language: auto follows Claude Code's own language setting (falling back to claude-hud's), or pick en or pt-BR",
+      "options": [
+        "auto",
+        "en",
+        "pt-BR"
+      ],
+      "default": "auto"
+    },
     "enabled": {
       "type": "boolean",
-      "title": "Linha de contexto (MB e previsão)",
-      "description": "Mostra a linha com clima, % do contexto, tamanho em MB, tokens, gráfico dos últimos turnos e variação do último turno.",
+      "title": "Context line (MB and forecast)",
+      "description": "Show the line with weather, size in MB, tokens, a chart of the last turns and the last turn's growth",
       "default": true
     },
     "visible": {

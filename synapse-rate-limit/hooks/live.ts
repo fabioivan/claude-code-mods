@@ -22,6 +22,8 @@ export const live = {
   sessionFile: undefined as string | undefined,
   bridgeSessionId: null as string | null,
   theme: THEMES[0]! as Theme,
+  // O `language` do settings.json do Claude Code, relido a cada passada.
+  claudeLanguage: undefined as unknown,
 }
 
 /** Columns claude-hud and the extras row may fill, leaving room for the theme's span effects. */

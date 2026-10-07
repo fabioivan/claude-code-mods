@@ -13,12 +13,13 @@ A base é o mod [`hud`](https://github.com/hoobnn/hoobnn-agent-mods/tree/main/cl
 A última linha da barra mostra o clima do contexto, o tamanho em MB do que é enviado ao modelo e como o contexto vem crescendo:
 
 ```
-☂ Chuva  12 MB  134k / 1m  ▁▂▂▃▃▄▅  +98k no último turno
+☂ Chuva  12 MB  134k / 1m  ▁▂▂▃▃▄▅  +98k no último turno      (pt-BR)
+☂ Rain   12 MB  134k / 1m  ▁▂▂▃▃▄▅  +98k last turn            (en)
 ```
 
 | Trecho | Significado |
 | --- | --- |
-| `☂ Chuva` | Clima (a "previsão"): `☀ Limpo` abaixo de 25%, `☁ Nublado` a partir de 25%, `☂ Chuva` a partir de 50%, `↯ Tempestade` a partir de 75% e `! Compacta logo` a partir de 90% |
+| `☂ Chuva` | Clima (a "previsão"): `☀ Limpo` (`Clear`) abaixo de 25%, `☁ Nublado` (`Cloudy`) a partir de 25%, `☂ Chuva` (`Rain`) a partir de 50%, `↯ Tempestade` (`Storm`) a partir de 75% e `! Compacta logo` (`Compact soon`) a partir de 90% |
 | `12 MB` | Tamanho em MB do contexto e dos anexos (as mensagens enviadas à API), colorido pelo mesmo clima. A referência é o limite de 32 MB |
 | `134k / 1m` | Tokens usados / janela de contexto |
 | `▁▂▃…` | Gráfico dos últimos 12 turnos |
@@ -28,7 +29,7 @@ A última linha da barra mostra o clima do contexto, o tamanho em MB do que é e
 - A porcentagem do contexto não se repete aqui, pois a linha de contexto do HUD já a mostra.
 - O tamanho em MB é recalculado ao fim de cada turno.
 - Quando o HUD está acima do prompt, uma linha em branco separa a barra do chat.
-- A opção `enabled` liga e desliga só esta linha. Os textos dela são sempre em português; o resto do HUD segue o idioma configurado (veja [Configuração](#configuração)).
+- A opção `enabled` liga e desliga só esta linha. Ela segue o idioma do HUD (veja [Idioma](#idioma)): português em `pt-BR` e inglês nos demais.
 
 ## O que vem do HUD
 
@@ -70,14 +71,13 @@ O comando era `/hud` no plugin original. `/synapse` também funciona no meio de 
 
 ## Configuração
 
-**Idioma.** O `language` do próprio claude-hud (`en`, `zh-Hans`, `zh-Hant`, `ja`, `ko`, `es`, `fr`, `de`, `pt-BR`, `ru`) define o idioma de todo o HUD, inclusive do que o mod acrescenta (alertas, linha de extras, painel de detalhes, `/synapse`, resumo da tarefa). O padrão é `en`; para português, use `pt-BR`. A linha do synapse não depende disso.
-
 **Arquivos do claude-hud.** `~/.claude/plugins/claude-hud/config.json` e `~/.claude/claude-hud.json`.
 
 **Opções do mod** (`/config`, ou `pluginConfigs.synapse-rate-limit.options` no settings):
 
 | Opção | Padrão | Descrição |
 | --- | --- | --- |
+| `language` | `auto` | Idioma do HUD: `auto` (o do Claude Code), `en` ou `pt-BR` (veja [Idioma](#idioma)) |
 | `enabled` | `true` | Linha do synapse (clima, MB, tokens, gráfico, variação) |
 | `visible` | `true` | Mostra o HUD. `/synapse`, `/synapse on`, `/synapse off` e o botão do rodapé alteram a opção, que é mantida entre sessões |
 | `footerButton` | `true` | Botão **HUD** no rodapé do prompt |
@@ -100,6 +100,20 @@ O comando era `/hud` no plugin original. `/synapse` também funciona no meio de 
 | `gitDirtyWarn` | `20` | Aviso de arquivos alterados e não commitados; `0` desliga |
 | `gitAheadWarn` | `5` | Aviso de commits não enviados; `0` desliga |
 | `showAgents` | `false` | Linhas de subagentes (o Claude Code já lista os em execução, com tempo e tokens; o painel de detalhes continua listando) |
+
+## Idioma
+
+Um só idioma vale para o HUD inteiro: as linhas do claude-hud, o que o mod acrescenta (alertas, linha de extras, painel de detalhes, mensagens de `/synapse`, resumo da tarefa) e a linha do synapse. A opção `language` escolhe:
+
+| Valor | Efeito |
+| --- | --- |
+| `auto` (padrão) | Segue o idioma do próprio Claude Code (`language` no `settings.json`): `Portugues`, `português`, `pt-BR` ou `Brazilian Portuguese` dão português; `English` ou `en` dão inglês. Se for outro idioma, ou não houver nenhum, vale o `language` do claude-hud |
+| `en` | Inglês |
+| `pt-BR` | Português do Brasil |
+
+- O `settings.json` é relido a cada atualização da barra, então mudar o idioma do Claude Code muda o HUD sem reiniciar.
+- Como último recurso em `auto`, o `language` do claude-hud (`en`, `zh-Hans`, `zh-Hant`, `ja`, `ko`, `es`, `fr`, `de`, `pt-BR`, `ru`) continua valendo para o HUD. A linha do synapse só tem texto em português e inglês, e usa o inglês nos outros idiomas.
+- Os nomes e as descrições das opções (em `/config`) e a descrição do comando `/synapse` ficam fixos: o manifesto do plugin não é traduzido.
 
 ## Temas
 
@@ -167,6 +181,7 @@ A stdin da statusline do Claude Code traz estes campos; a API de mods não, ent�
 - Comando `/synapse` no lugar de `/hud`; ferramenta de debug `synapse_debug`.
 - Estado e chaves de configuração sob o nome `synapse-rate-limit`, sem conflito com o `hud`.
 - Linha extra do synapse (clima, MB, tokens, gráfico e variação) e a opção `enabled`.
+- Opção `language` (`auto`, `en`, `pt-BR`), que segue o idioma do Claude Code.
 - Espaço em branco entre o chat e a barra, quando ela fica acima do prompt.
 - Os caches continuam em `plugins/claude-hud-mod`, o mesmo diretório do `hud` original, então os dois compartilham o livro de custos diários.
 
@@ -182,7 +197,8 @@ claude --plugin-dir /caminho/para/synapse-rate-limit
 
 - `hooks/register.tsx`: os hooks e tudo o que chama `$` (o engine só segue `$` dentro deste arquivo): o início da sessão, os eventos do turno, `/synapse`, o laço de atualização, alertas, gasto, resumo e os hooks de renderização. Os outros módulos recebem closures sobre `$` (`Io`, `SessionApi`).
 - `hooks/synapse-row.ts`: monta a linha do synapse.
-- `hooks/synapse-format.ts`: clima, formatação de MB e tokens, gráfico.
+- `hooks/synapse-format.ts`: clima (com os textos em inglês e português), formatação de MB e tokens, gráfico.
+- `hooks/language.ts`: resolve o idioma do HUD (opção do mod, idioma do Claude Code ou o do claude-hud).
 - `hooks/config.ts`: as opções do mod, lidas uma vez em um `Config` tipado.
 - `hooks/stdin.ts`: monta a stdin da statusline que o claude-hud espera a partir da sessão (uso, configurações, repositório, passos do turno) e do transcript; os fatos do host que o claude-hud lê (env, plataforma, memória).
 - `hooks/render.ts`: uma passada: as linhas do claude-hud, o rótulo do Remote Control, o gasto de hoje; as contagens do git para o aviso.

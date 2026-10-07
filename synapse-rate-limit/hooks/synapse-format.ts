@@ -3,12 +3,25 @@ export const MAX_TURNS = 12
 
 export type Weather = { symbol: string; word: string; color: string }
 
-export function weather(percent: number): Weather {
-  if (percent >= 90) return { symbol: '!', word: 'Compacta logo', color: 'red' }
-  if (percent >= 75) return { symbol: '↯', word: 'Tempestade', color: 'magenta' }
-  if (percent >= 50) return { symbol: '☂', word: 'Chuva', color: 'blue' }
-  if (percent >= 25) return { symbol: '☁', word: 'Nublado', color: 'cyan' }
-  return { symbol: '☀', word: 'Limpo', color: 'yellow' }
+export type RowLanguage = 'en' | 'pt-BR'
+
+/** Os textos da linha do synapse; um idioma que o HUD fala e a linha não tem usa o inglês. */
+export const ROW_TEXT: Record<RowLanguage, { weather: [string, string, string, string, string]; lastTurn: string }> = {
+  en: { weather: ['Clear', 'Cloudy', 'Rain', 'Storm', 'Compact soon'], lastTurn: 'last turn' },
+  'pt-BR': { weather: ['Limpo', 'Nublado', 'Chuva', 'Tempestade', 'Compacta logo'], lastTurn: 'no último turno' },
+}
+
+export function rowText(lang: string) {
+  return lang === 'pt-BR' ? ROW_TEXT['pt-BR'] : ROW_TEXT.en
+}
+
+export function weather(percent: number, lang: string = 'en'): Weather {
+  const [clear, cloudy, rain, storm, compact] = rowText(lang).weather
+  if (percent >= 90) return { symbol: '!', word: compact, color: 'red' }
+  if (percent >= 75) return { symbol: '↯', word: storm, color: 'magenta' }
+  if (percent >= 50) return { symbol: '☂', word: rain, color: 'blue' }
+  if (percent >= 25) return { symbol: '☁', word: cloudy, color: 'cyan' }
+  return { symbol: '☀', word: clear, color: 'yellow' }
 }
 
 export function fmtTokens(n: number): string {

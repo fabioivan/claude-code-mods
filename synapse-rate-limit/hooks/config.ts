@@ -3,6 +3,7 @@
 import type { PluginOptions } from 'claude-code'
 
 import { parseThresholds } from './extras.js'
+import { LANGUAGE_OPTIONS, type LanguageOption } from './language.js'
 import { count, flag, oneOf, text } from './kit/options.js'
 import { findTheme, THEMES, type Theme } from './themes.js'
 
@@ -10,6 +11,8 @@ export type Config = {
   isVisible: boolean
   /** A HUD button in the prompt footer. */
   hasFooterButton: boolean
+  /** `auto` segue o idioma do Claude Code; `en` e `pt-BR` fixam o do HUD. */
+  language: LanguageOption
   /** The context line: weather, size in MB, tokens, last turns' chart and growth. */
   hasContextLine: boolean
   position: 'above' | 'below'
@@ -44,6 +47,7 @@ export function readConfig(options: PluginOptions): Config {
   return {
     isVisible: flag(options.visible, true),
     hasFooterButton: flag(options.footerButton, true),
+    language: oneOf(options.language, LANGUAGE_OPTIONS, 'auto'),
     hasContextLine: flag(options.enabled, true),
     position: oneOf(options.position, ['above', 'below'], 'above'),
     theme: findTheme(options.theme) ?? THEMES[0]!,
