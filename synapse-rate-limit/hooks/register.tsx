@@ -186,6 +186,23 @@ export const register: Register = (on, options) => {
   let sizeBytes = 0
   let sizePercent = 0
   let percentLog: number[] = []
+  // Mede o que o próximo request leva (mensagens + anexos inline). Roda também antes de cada passo
+  // e no envio do prompt: o request que estoura o limite é o que ainda não fechou um turno.
+  const measureSize = async ($: any) => {
+    if (!config.hasContextLine) return
+    try {
+      const messages = await $.session.messages({ as: 'api' })
+      let bytes = 0
+      if (Array.isArray(messages)) for (const msg of messages) bytes += JSON.stringify(msg).length
+      if (bytes !== sizeBytes) {
+        sizeBytes = bytes
+        sizePercent = bytesPercent(bytes)
+        schedule()
+      }
+    } catch {
+      // sem leitura agora: mantém o último valor
+    }
+  }
 
   const schedule = () => {
     // A draw can come before session.start: nothing to schedule on yet, and
@@ -447,7 +464,9 @@ export const register: Register = (on, options) => {
   on('prompt.submit', async ($, e, next) => {
     if (await read($, isPicking)) await update($, isPicking, () => false)
     if (await sawBridge($, e.origin)) schedule()
-    return next(e)
+    const result = await next(e)
+    setTimeout(() => void measureSize($), 300)
+    return result
   })
   on('command.run', async ($, e, next) => {
     if (await sawBridge($, e.origin)) schedule()
@@ -468,6 +487,7 @@ export const register: Register = (on, options) => {
   // Usage pushed by the engine: the alerts at once, and the gauges redrawn.
   on('session.measure', async ($, e, next) => {
     await alert($, gaugesOf(e), config.contextAlerts, config.usageAlerts)
+    await measureSize($)
     schedule()
     return next(e)
   })
@@ -525,6 +545,7 @@ export const register: Register = (on, options) => {
   })
 
   on('turn.step', async function* ($, e, next) {
+    if (!e.agentId) await measureSize($)
     const started = Date.now()
     const result = yield* next(e)
     const elapsed = Date.now() - started

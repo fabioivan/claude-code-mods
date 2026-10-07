@@ -1,6 +1,6 @@
 {
   "name": "synapse-rate-limit",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "HUD completo (modelo, projeto, git, contexto, uso, ferramentas, agentes, todos, alertas, orçamento, histórico, resumo, painel de detalhes e temas) mais a linha do synapse: clima/previsão, % do contexto, tamanho em MB do contexto/anexos, tokens e gráfico dos últimos turnos.",
   "author": {
     "name": "Fabio Borchardt",
