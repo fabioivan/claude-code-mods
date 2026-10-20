@@ -2,7 +2,7 @@
 // MB do contexto/anexos, tokens e gráfico dos últimos turnos.
 import type { GuardLimits, HudLine } from '../types'
 import { language } from './i18n.js'
-import { bytesPercent, fmtMb, fmtTokens, guardPercent, spark, weather } from './synapse-format.js'
+import { bytesPercent, fmtMb, guardPercent, spark, weather } from './synapse-format.js'
 
 export type ContextView = {
   percent: number
@@ -18,17 +18,14 @@ export function contextRow(v: ContextView, lang: string = language()): HudLine {
   const w = weather(v.percent, lang)
   const sw = weather(bytesPercent(v.bytes), lang)
   const gap = { text: '  ' }
-  const row: HudLine = [
-    { text: `${w.symbol} ${w.word}`, color: w.color, bold: true },
-    gap,
-    { text: fmtMb(v.bytes), color: sw.color },
-    gap,
-    { text: `${fmtTokens(v.tokens).toLowerCase()} / ${fmtTokens(v.window).toLowerCase()}`, dimColor: true },
-  ]
+  const row: HudLine = [{ text: `${w.symbol} ${w.word}`, color: w.color, bold: true }]
   if (v.guard) {
     const g = weather(guardPercent(v.bytes, v.tokens, v.window, v.guard), lang)
     const used = v.window > 0 ? Math.round((v.tokens / v.window) * 100) : 0
     row.push(gap, { text: `⛨ ${fmtMb(v.bytes)} / ${fmtMb(v.guard.maxBytes)} · ${used} / ${v.guard.maxPercent}%`, color: g.color })
+  } else {
+    // Os tokens vão na linha do contexto; sem o guard sobra aqui só o MB solto.
+    row.push(gap, { text: fmtMb(v.bytes), color: sw.color })
   }
   if (v.history.length > 0) row.push(gap, { text: spark(v.history), color: w.color })
   return row
