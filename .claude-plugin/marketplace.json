@@ -24,8 +24,8 @@
     {
       "name": "ctx-bytes-guard",
       "source": "./ctx-bytes-guard",
-      "description": "Compacta sozinho quando o contexto passa de 50% ou o payload passa de 16 MB; com o synapse-rate-limit, os limites aparecem na linha dos MB",
-      "version": "0.2.0",
+      "description": "Compacta sozinho quando o payload passa de 16 MB (opção maxMb), antes de cada mensagem e ao fim do turno; com o synapse-rate-limit, os limites aparecem na linha dos MB",
+      "version": "0.3.0",
       "category": "monitoring",
       "tags": [
         "contexto",

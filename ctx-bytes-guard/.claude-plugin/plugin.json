@@ -1,7 +1,7 @@
 {
   "name": "ctx-bytes-guard",
-  "version": "0.2.0",
-  "description": "Compacta sozinho quando o contexto passa de 50% ou o payload da conversa passa de 16 MB. Com o synapse-rate-limit instalado, os limites aparecem na linha dos MB.",
+  "version": "0.3.0",
+  "description": "Compacta sozinho quando o payload da conversa passa de 16 MB, antes de cada mensagem e ao fim do turno. Com o synapse-rate-limit instalado, os limites aparecem na linha dos MB.",
   "author": {
     "name": "Fabio Borchardt",
     "url": "https://github.com/fabioivan"
@@ -15,8 +15,14 @@
     "maxMb": {
       "type": "number",
       "title": "Compact at (MB)",
-      "description": "Compact when the conversation payload reaches this many MB (also when the context reaches 50%)",
+      "description": "Compact when the conversation payload reaches this many MB",
       "default": 16
+    },
+    "maxPercent": {
+      "type": "number",
+      "title": "Also compact at context (%)",
+      "description": "Also compact when the context window reaches this percent; 100 means only the MB limit applies",
+      "default": 100
     }
   }
 }
