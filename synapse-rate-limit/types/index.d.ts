@@ -70,6 +70,9 @@ export type DockPet = {
   stats: string
 }
 
+/** Os limites do ctx-bytes-guard (`ctx-bytes-guard.limits`), para a linha dos MB. Igual no contrato dele. */
+export type GuardLimits = { maxBytes: number; maxPercent: number }
+
 declare module 'claude-code' {
   interface PluginState {
     'synapse-rate-limit': {
@@ -96,6 +99,10 @@ declare module 'claude-code' {
       petPats: number
       /** True while a `/` or `@` picker is open above the band. */
       isPicking: boolean
+    }
+    /** ctx-bytes-guard's limits (read only); null until it is installed and a turn ended. */
+    'ctx-bytes-guard': {
+      limits: GuardLimits | null
     }
     /** spinner's pet (read only). */
     spinner: {

@@ -1,6 +1,6 @@
 import { test, expect } from 'claude-code/testing'
 
-import { bytesPercent, fmtMb, fmtTokens, spark, weather } from './synapse-format'
+import { bytesPercent, fmtMb, fmtTokens, guardPercent, spark, weather } from './synapse-format'
 import { fromClaudeCode, resolveLanguage } from './language'
 
 test('faixas de clima em inglês (padrão) e português', () => {
@@ -22,6 +22,13 @@ test('formatação', () => {
   expect(fmtMb(12.34 * 1024 * 1024)).toBe('12 MB')
   expect(fmtMb(1.5 * 1024 * 1024)).toBe('1.5 MB')
   expect(bytesPercent(16 * 1024 * 1024)).toBe(50)
+})
+
+test('proximidade do compact do ctx-bytes-guard', () => {
+  const g = { maxBytes: 16 * 1024 * 1024, maxPercent: 50 }
+  expect(guardPercent(8 * 1024 * 1024, 0, 0, g)).toBe(50)
+  expect(guardPercent(0, 250_000, 1_000_000, g)).toBe(50)
+  expect(guardPercent(32 * 1024 * 1024, 0, 0, g)).toBe(100)
 })
 
 test('o idioma do Claude Code vira um idioma do HUD', () => {

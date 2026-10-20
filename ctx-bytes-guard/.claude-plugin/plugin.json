@@ -1,0 +1,22 @@
+{
+  "name": "ctx-bytes-guard",
+  "version": "0.2.0",
+  "description": "Compacta sozinho quando o contexto passa de 50% ou o payload da conversa passa de 16 MB. Com o synapse-rate-limit instalado, os limites aparecem na linha dos MB.",
+  "author": {
+    "name": "Fabio Borchardt",
+    "url": "https://github.com/fabioivan"
+  },
+  "homepage": "https://github.com/fabioivan/claude-code-mods",
+  "repository": "https://github.com/fabioivan/claude-code-mods",
+  "license": "MIT",
+  "keywords": ["context", "compact", "mod"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "maxMb": {
+      "type": "number",
+      "title": "Compact at (MB)",
+      "description": "Compact when the conversation payload reaches this many MB (also when the context reaches 50%)",
+      "default": 16
+    }
+  }
+}

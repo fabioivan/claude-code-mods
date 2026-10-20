@@ -45,6 +45,13 @@ export function bytesPercent(bytes: number): number {
   return Math.min(100, (bytes / MAX_BYTES) * 100)
 }
 
+/** Quão perto do compact do ctx-bytes-guard: o maior entre o tamanho e o contexto, cada um contra o seu limite. */
+export function guardPercent(bytes: number, tokens: number, window: number, g: { maxBytes: number; maxPercent: number }): number {
+  const ofBytes = (bytes / g.maxBytes) * 100
+  const ofContext = window > 0 ? (tokens / window / (g.maxPercent / 100)) * 100 : 0
+  return Math.min(100, Math.max(ofBytes, ofContext))
+}
+
 export function fmtMb(bytes: number): string {
   const mb = bytes / (1024 * 1024)
   return `${mb < 10 ? mb.toFixed(1) : Math.round(mb)} MB`

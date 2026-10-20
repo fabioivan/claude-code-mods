@@ -10,7 +10,7 @@ import './shims/globals.js'
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
-import type { DockPet, Fired, HudLine, Remote, StepInfo, ToolStats, TurnCost } from '../types'
+import type { DockPet, Fired, GuardLimits, HudLine, Remote, StepInfo, ToolStats, TurnCost } from '../types'
 import { readConfig } from './config.js'
 import { drawPane, drawRows } from './draw.js'
 import { addSample, appendExtras, chimeWav, crossThresholds, exhaustAt, extrasLine, formatDuration, growthOf, lastDays, localDay, paceAt, pruneHistory, streak } from './extras.js'
@@ -63,6 +63,8 @@ const turnStart = atom({ plugin: 'synapse-rate-limit', key: 'turnStart' } as con
 const TURN_LOG_SIZE = 8
 // spinner's pet, and whether it stands beside the HUD's rows (below the prompt only).
 const petDock = atom({ plugin: 'spinner', key: 'dock' } as const, null as DockPet | null)
+// ctx-bytes-guard's limits, when it is installed: the context line shows how close the size is.
+const guardLimits = atom({ plugin: 'ctx-bytes-guard', key: 'limits' } as const, null as GuardLimits | null)
 const isPetDocked = atom({ plugin: 'synapse-rate-limit', key: 'dock' } as const, false)
 const petPats = atom({ plugin: 'synapse-rate-limit', key: 'petPats' } as const, 0)
 // True while a picker is open above the band (see kit/band.tsx).
@@ -311,6 +313,7 @@ export const register: Register = (on, options) => {
                   tokens: ctxTokens,
                   window,
                   history: percentLog,
+                  guard: await read($, guardLimits),
                 } satisfies ContextView),
               ]
             : themed
