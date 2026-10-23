@@ -1,6 +1,6 @@
 {
   "name": "ctx-bytes-guard",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Compacta sozinho quando o payload da conversa passa de 16 MB, antes de cada mensagem e ao fim do turno. Com o synapse-rate-limit instalado, os limites aparecem na linha dos MB.",
   "author": {
     "name": "Fabio Borchardt",
